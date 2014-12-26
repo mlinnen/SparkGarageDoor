@@ -2,3 +2,4 @@ A Spark Core project for controlling my garage doors.  This is a work in progres
 
 Some details of the project can be found in the following blog posts:
  - [Garage Door and the Spark Core](http://www.protosystem.net/post/2014/12/20/Garage-door-and-the-Spark-Core.aspx)
+ - [Info on the Spark Core](https://www.spark.io/)
