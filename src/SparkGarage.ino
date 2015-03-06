@@ -6,12 +6,6 @@ DHT dht(DHTPIN, DHTTYPE);
 #include "GarageDoor.h"
 GarageDoor garageDoor(D3,D4,D5,D0,D1);
 
-const int STATUS_UNKNOWN = 0;
-const int STATUS_OPENED = 1;
-const int STATUS_CLOSED = 2;
-const int STATUS_OPENING = 3;
-const int STATUS_CLOSING = 4;
-
 int currentStatus;
 int lastStatus;
 double currentTemp;
@@ -31,7 +25,7 @@ void setup() {
     Spark.function("command", garageDoorCommand);
 
     // Register variables
-    Spark.variable("status",&currentStatus,INT);
+    Spark.variable("doorstatus",&currentStatus,INT);
     Spark.variable("temp",&currentTemp,DOUBLE);
     Spark.variable("humidity",&currentHumidity,DOUBLE);
     Spark.variable("heatIndex",&currentHeatIndex,DOUBLE);
