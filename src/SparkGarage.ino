@@ -45,8 +45,8 @@ void loop() {
 
     if (currentStatus != lastStatus){
         // Notify other devices that the door changed state
-        String data = String(currentStatus);
-        Spark.publish("garage-door-status", data, 60, PRIVATE);
+        //String data = String(currentStatus);
+        //Spark.publish("garage-door-status", data, 60, PRIVATE);
     }
 
     lastStatus = currentStatus;
