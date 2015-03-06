@@ -62,27 +62,30 @@ int GarageDoor::readStatus(){
           s = STATUS_CLOSING;
       }
   }
-  _lastDoorClosed = doorClosed;
-  _lastDoorOpened = doorOpened;
+  if (s == STATUS_CLOSED || s == STATUS_OPENED)
+  {
+      _lastDoorClosed = doorClosed;
+      _lastDoorOpened = doorOpened;
+  }
 
   boolean openedLED = false;
   boolean closedLED = false;
 
   // Determine how to set the LED status
   if (s == STATUS_OPENED){
-      openedLED = LOW;
-      closedLED = HIGH;
-  }
-  else if (s == STATUS_CLOSED){
       openedLED = HIGH;
       closedLED = LOW;
   }
-  else if (s == STATUS_OPENING){
-      openedLED= !digitalRead(_openLEDPin);
+  else if (s == STATUS_CLOSED){
+      openedLED = LOW;
       closedLED = HIGH;
   }
+  else if (s == STATUS_OPENING){
+      openedLED= !digitalRead(_openLEDPin);
+      closedLED = LOW;
+  }
   else if (s == STATUS_CLOSING){
-      openedLED= HIGH;
+      openedLED= LOW;
       closedLED = !digitalRead(_closeLEDPin);
   }
   else if (s == STATUS_UNKNOWN){
