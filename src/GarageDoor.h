@@ -6,12 +6,12 @@ class GarageDoor {
  private:
   int _currentStatus;
   int _lastStatus;
-  int _openSensorPin, _closeSensorPin, _relayPin;
+  int _openSensorPin, _closeSensorPin, _relayPin, _openLEDPin, _closeLEDPin;
   boolean _lastDoorOpened;
   boolean _lastDoorClosed;
 
  public:
-  GarageDoor(int openSensorPin, int closeSensorPin, int relayPin);
+  GarageDoor(int openSensorPin, int closeSensorPin, int relayPin, int openLEDPin, int closeLEDPin);
   void begin(void);
   int readStatus();
   boolean Close();

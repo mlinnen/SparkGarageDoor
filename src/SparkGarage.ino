@@ -4,18 +4,7 @@
 DHT dht(DHTPIN, DHTTYPE);
 
 #include "GarageDoor.h"
-GarageDoor garageDoor(D3,D4,D5);
-
-#define DOOR_OPENED_LED D0
-#define DOOR_CLOSED_LED D1
-
-int lastDoorOpened = 0;
-int lastDoorClosed = 0;
-int doorClosed = 0;
-int doorOpened = 0;
-
-boolean lastOpenedLED = false;
-boolean lastClosedLED = false;
+GarageDoor garageDoor(D3,D4,D5,D0,D1);
 
 const int STATUS_UNKNOWN = 0;
 const int STATUS_OPENED = 1;
@@ -34,11 +23,6 @@ void setup() {
     currentStatus = 0;
     lastStatus = 0;
 
-    // Setup the pins
-    // Door Status LEDs
-    pinMode(DOOR_OPENED_LED, OUTPUT);
-    pinMode(DOOR_CLOSED_LED, OUTPUT);
-
     dht.begin();
 
     garageDoor.begin();
@@ -48,11 +32,9 @@ void setup() {
 
     // Register variables
     Spark.variable("status",&currentStatus,INT);
-    Spark.variable("opensensor",&doorClosed,INT);
-    Spark.variable("closesensor",&doorOpened,INT);
     Spark.variable("temp",&currentTemp,DOUBLE);
     Spark.variable("humidity",&currentHumidity,DOUBLE);
-    Spark.variable("hi",&currentHeatIndex,DOUBLE);
+    Spark.variable("heatIndex",&currentHeatIndex,DOUBLE);
 
     // Register subscriptions
     // Look for the good night command
@@ -75,36 +57,6 @@ void loop() {
 
     lastStatus = currentStatus;
 
-    boolean openedLED = false;
-    boolean closedLED = false;
-
-    // Determine how to set the LED status
-    if (currentStatus == STATUS_OPENED){
-        openedLED = LOW;
-        closedLED = HIGH;
-    }
-    else if (currentStatus == STATUS_CLOSED){
-        openedLED = HIGH;
-        closedLED = LOW;
-    }
-    else if (currentStatus == STATUS_OPENING){
-        openedLED= !lastOpenedLED;
-        closedLED = HIGH;
-    }
-    else if (currentStatus == STATUS_CLOSING){
-        openedLED= HIGH;
-        closedLED = !lastClosedLED;
-    }
-    else if (currentStatus == STATUS_UNKNOWN){
-        openedLED= !lastOpenedLED;
-        closedLED = !lastClosedLED;
-    }
-
-    digitalWrite(DOOR_OPENED_LED,openedLED);
-    digitalWrite(DOOR_CLOSED_LED,closedLED);
-
-    lastOpenedLED = openedLED;
-    lastClosedLED = closedLED;
 
     delay(1000);
 }

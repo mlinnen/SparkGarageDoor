@@ -8,9 +8,11 @@ const int STATUS_CLOSED = 2;
 const int STATUS_OPENING = 3;
 const int STATUS_CLOSING = 4;
 
-GarageDoor::GarageDoor(int openSensorPin, int closeSensorPin, int relayPin) {
+GarageDoor::GarageDoor(int openSensorPin, int closeSensorPin, int relayPin, int openLEDPin, int closeLEDPin) {
   _openSensorPin = openSensorPin;
   _closeSensorPin = closeSensorPin;
+  _closeLEDPin = closeLEDPin;
+  _openLEDPin = openLEDPin;
   _relayPin = relayPin;
 }
 void GarageDoor::begin(void) {
@@ -20,6 +22,9 @@ void GarageDoor::begin(void) {
 
   pinMode(_openSensorPin,INPUT_PULLUP);
   pinMode(_closeSensorPin,INPUT_PULLUP);
+
+  pinMode(_openLEDPin, OUTPUT);
+  pinMode(_closeLEDPin, OUTPUT);
 
 }
 
@@ -57,6 +62,36 @@ int GarageDoor::readStatus(){
           s = STATUS_CLOSING;
       }
   }
+  _lastDoorClosed = doorClosed;
+  _lastDoorOpened = doorOpened;
+
+  boolean openedLED = false;
+  boolean closedLED = false;
+
+  // Determine how to set the LED status
+  if (s == STATUS_OPENED){
+      openedLED = LOW;
+      closedLED = HIGH;
+  }
+  else if (s == STATUS_CLOSED){
+      openedLED = HIGH;
+      closedLED = LOW;
+  }
+  else if (s == STATUS_OPENING){
+      openedLED= !digitalRead(_openLEDPin);
+      closedLED = HIGH;
+  }
+  else if (s == STATUS_CLOSING){
+      openedLED= HIGH;
+      closedLED = !digitalRead(_closeLEDPin);
+  }
+  else if (s == STATUS_UNKNOWN){
+      openedLED= !digitalRead(_openLEDPin);
+      closedLED = !digitalRead(_closeLEDPin);
+  }
+
+  digitalWrite(_openLEDPin,openedLED);
+  digitalWrite(_closeLEDPin,closedLED);
 
   return s;
 }
